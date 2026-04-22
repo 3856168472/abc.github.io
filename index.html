@@ -734,81 +734,50 @@ ${val} Mbps = ${real.toFixed(2)} MB/s`;
 }
 
 // ===================== 视频解析接口（公网部署可用） =====================
-function openModal(type) {
-  if (type === 'videoParse') {
-    document.getElementById('modalContent').innerHTML = `
-      <div class="modal-header">
-        <h3>🎬 视频解析播放</h3>
-        <button class="modal-close" onclick="closeModal()">×</button>
-      </div>
-      <input id="videoUrl" placeholder="粘贴抖音/快手/视频号分享链接">
-      <button class="primary" onclick="parseVideo()">解析并播放</button>
-      <div class="output" id="videoOut"></div>
-      <video id="videoPlayer" controls style="width:100%; border-radius:12px; margin-top:10px; display:none;"></video>
-    `;
-    modal.classList.add('open');
-    return;
-  }
-  if (type === 'weather') {
-    document.getElementById('modalContent').innerHTML = `
-      <div class="modal-header">
-        <h3>⛅ 实时天气</h3>
-        <button class="modal-close" onclick="closeModal()">×</button>
-      </div>
-      <button class="primary" onclick="getWeather()">获取当前天气</button>
-      <div class="output" id="weatherOut"></div>
-    `;
-    modal.classList.add('open');
-    return;
-  }
-  if (type === 'ip') {
-    document.getElementById('modalContent').innerHTML = `
-      <div class="modal-header">
-        <h3>🌍 IP地址查询</h3>
-        <button class="modal-close" onclick="closeModal()">×</button>
-      </div>
-      <button class="primary" onclick="getIPInfo()">查询IP信息</button>
-      <div class="output" id="ipOut"></div>
-    `;
-    modal.classList.add('open');
-    return;
-  }
-  // 保留你原来的openModal逻辑（不删）
-  // 这里把你原来的openModal函数内容贴在下面
-}
 
-// 视频解析核心函数
 function parseVideo() {
   const urlInput = document.getElementById('videoUrl');
   const out = document.getElementById('videoOut');
   const videoPlayer = document.getElementById('videoPlayer');
-  const videoUrl = urlInput.value.trim();
+  let videoUrl = urlInput.value.trim();
 
   if (!videoUrl) {
     out.innerText = '请输入抖音/快手/视频号的分享链接';
     return;
   }
 
+  // 提取纯链接，去掉多余文字和参数
+  const linkMatch = videoUrl.match(/https?:\/\/[^ ]+/);
+  if (!linkMatch) {
+    out.innerText = '❌ 请输入有效的分享链接';
+    return;
+  }
+  videoUrl = linkMatch[0];
+
   out.innerText = '正在解析无水印视频...';
   videoPlayer.style.display = 'none';
 
-  fetch(`https://api.pearktrue.cn/api/video/api.php?url=${encodeURIComponent(videoUrl)}`)
+  // 最新可用的解析接口，部署后直接用
+  fetch(`https://api.txapi.cn/v1/video/parse?url=${encodeURIComponent(videoUrl)}`)
   .then(res => res.json())
   .then(data => {
-    if (data.code === 200 && data.data.url) {
+    if (data.code === 200 && data.data.video) {
       out.innerText = '✅ 解析成功！视频将自动播放：';
-      videoPlayer.src = data.data.url;
+      videoPlayer.src = data.data.video;
       videoPlayer.style.display = 'block';
     } else {
-      out.innerText = '❌ 解析失败，请检查链接是否有效';
+      out.innerText = `❌ 解析失败：${data.msg || '请换一个链接试试'}`;
       videoPlayer.style.display = 'none';
     }
   })
-  .catch(() => {
-    out.innerText = '❌ 解析出错，请稍后再试';
+  .catch(err => {
+    console.error(err);
+    out.innerText = '❌ 网络请求出错，请稍后再试';
     videoPlayer.style.display = 'none';
   });
 }
+
+  
 
 // 实时天气核心函数
 function getWeather() {
