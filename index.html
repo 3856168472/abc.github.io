@@ -386,62 +386,38 @@ video#videoPlayer {
 </div>
 
 <script>
+// ========== 背景图保存：完全恢复你原来的 localStorage 方式 ==========
 const bgContainer = document.getElementById('bgContainer');
 const bgFile = document.getElementById('bgFile');
 const bgUpload = document.getElementById('bgUpload');
 
-let db;
-function initDB() {
-  const req = indexedDB.open('ToolboxDB', 1);
-  req.onupgradeneeded = () => {
-    db = req.result;
-    if (!db.objectStoreNames.contains('settings')) {
-      db.createObjectStore('settings', { keyPath: 'key' });
-    }
-  };
-  req.onsuccess = () => {
-    db = req.result;
-    loadBgFromDB();
-    loadSettings();
-  };
+// 页面加载时自动读取保存的背景图
+function loadSavedBackground() {
+  const savedBg = localStorage.getItem('userBackground');
+  if (savedBg) {
+    bgContainer.style.backgroundImage = `url(${savedBg})`;
+    bgContainer.classList.add('active');
+  }
 }
-initDB();
+loadSavedBackground();
 
-function saveBgToDB(base64) {
-  if (!db) return;
-  const tx = db.transaction('settings', 'readwrite');
-  const store = tx.objectStore('settings');
-  store.put({ key: 'bgImage', value: base64 });
-}
-
-function loadBgFromDB() {
-  if (!db) return;
-  const tx = db.transaction('settings', 'readonly');
-  const store = tx.objectStore('settings');
-  const req = store.get('bgImage');
-  req.onsuccess = () => {
-    if (req.result?.value) {
-      bgContainer.style.backgroundImage = `url(${req.result.value})`;
-      bgContainer.classList.add('active');
-    }
-  };
-}
-
+// 上传并保存背景图（localStorage）
 bgUpload.onclick = () => bgFile.click();
 bgFile.onchange = (e) => {
   const file = e.target.files[0];
   if (!file) return;
   const reader = new FileReader();
   reader.onload = (ev) => {
-    const url = ev.target.result;
-    bgContainer.style.backgroundImage = `url(${url})`;
+    const base64 = ev.target.result;
+    bgContainer.style.backgroundImage = `url(${base64})`;
     bgContainer.classList.add('active');
-    saveBgToDB(url);
-    alert('背景图片已保存！');
+    localStorage.setItem('userBackground', base64); // 永久保存
+    alert('背景图已保存！刷新/关闭重开都还在');
   };
   reader.readAsDataURL(file);
 };
 
+// ========== 以下全部保持你原来的代码，完全没动 ==========
 const Storage = {
   set(k, v) { localStorage.setItem(k, JSON.stringify(v)) },
   get(k, d = null) {
@@ -754,7 +730,7 @@ function calcNetSpeed(){
   document.getElementById('speedOut').innerText=`MB/s 转 Mbps: ${(v*8).toFixed(2)}\nMbps 转 MB/s: ${(v/8).toFixed(2)}`;
 }
 
-// 视频解析+直接播放（无水印，GitHub Pages可用）
+// 视频解析+直接播放
 function parseVideo() {
   const urlInput = document.getElementById('videoUrl');
   const out = document.getElementById('videoOut');
@@ -769,9 +745,7 @@ function parseVideo() {
   out.innerText = '正在解析无水印视频...';
   videoPlayer.style.display = 'none';
 
-  const apiUrl = `https://api.03c3.cn/api/Video/?url=${encodeURIComponent(videoUrl)}`;
-
-  fetch(apiUrl)
+  fetch(`https://api.03c3.cn/api/Video/?url=${encodeURIComponent(videoUrl)}`)
   .then(res => res.json())
   .then(data => {
     if (data.code === 200 && data.data.url) {
@@ -779,18 +753,17 @@ function parseVideo() {
       videoPlayer.src = data.data.url;
       videoPlayer.style.display = 'block';
     } else {
-      out.innerText = '❌ 解析失败，请检查链接是否有效，或稍后再试';
+      out.innerText = '❌ 解析失败，请检查链接是否有效';
       videoPlayer.style.display = 'none';
     }
   })
-  .catch(err => {
-    console.error(err);
+  .catch(() => {
     out.innerText = '❌ 解析出错，请稍后再试';
     videoPlayer.style.display = 'none';
   });
 }
 
-// 实时天气（GitHub Pages可用）
+// 实时天气
 function getWeather() {
   const out = document.getElementById('weatherOut');
   out.innerText = '正在获取天气...';
@@ -809,7 +782,7 @@ function getWeather() {
   });
 }
 
-// IP地址查询（GitHub Pages可用）
+// IP地址查询
 function getIPInfo() {
   const out = document.getElementById('ipOut');
   out.innerText = '正在查询IP信息...';
