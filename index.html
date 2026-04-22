@@ -1,11 +1,4 @@
 <!DOCTYPE html>
-<html>
-  <head>
-	<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-	<title>WebCat</title>
-  </head>
-  <body>	
-<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -299,7 +292,6 @@ button.primary:hover {
     <div class="icon">📲</div><div class="title">二维码生成</div><div class="desc">文本转二维码</div>
   </div>
 
-  <!-- 视频解析 + 在线专用工具 -->
   <div class="card" data-type="online" onclick="openModal('videoParse')">
     <div class="icon">🎬</div><div class="title">视频解析</div><div class="desc">抖音/快手无水印解析</div>
   </div>
@@ -559,12 +551,10 @@ function renderTool(type) {
       h = `<div class="modal-header"><h3>身份证信息查询</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="idcard" placeholder="输入18位身份证号" maxlength="18"><button class="primary" onclick="queryIdCard()">查询</button><div class="output" id="idcardOut"></div>`; break;
     case 'netSpeed':
       h = `<div class="modal-header"><h3>网速换算</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="speedVal" placeholder="输入数值" type="number"><button class="primary" onclick="calcNetSpeed()">转换 Mbps ↔ MB/s</button><div class="output" id="speedOut"></div>`; break;
-    // 视频解析
     case 'videoParse':
       h = `<div class="modal-header"><h3>视频解析</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="videoUrl" placeholder="粘贴抖音/快手分享链接"><button class="primary" onclick="parseVideo()">解析视频</button><video id="videoPlayer" controls style="width:100%;border-radius:12px;margin-top:12px;display:none"></video><div class="output" id="videoOut"></div>`; break;
-    // 公网部署专用功能
     case 'ipInfo':
-      h = `<div class="modal-header"><h3>本机IP信息</h3><button class="modal-close" onclick="closeModal()">×</button></div><button class="primary" onclick="getIpInfo()">获取IP信息</button><div class="output" id="ipOut"></div>`; break;
+      h = `<div class="modal-header"><h3>本机IP信息</h3><button class="modal-close" onclick="closeModal()">×</button></div><button class="primary" onclick="getIPInfo()">获取IP信息</button><div class="output" id="ipOut"></div>`; break;
     case 'weather':
       h = `<div class="modal-header"><h3>实时天气</h3><button class="modal-close" onclick="closeModal()">×</button></div><button class="primary" onclick="getWeather()">获取当前天气</button><div class="output" id="weatherOut"></div>`; break;
     case 'shortUrl':
@@ -733,85 +723,73 @@ function calcNetSpeed() {
 ${val} Mbps = ${real.toFixed(2)} MB/s`;
 }
 
-// ===================== 视频解析接口（公网部署可用） =====================
-
+// ===================== 视频解析接口 =====================
 function parseVideo() {
   const urlInput = document.getElementById('videoUrl');
   const out = document.getElementById('videoOut');
   const videoPlayer = document.getElementById('videoPlayer');
-  let videoUrl = urlInput.value.trim();
+  const videoUrl = urlInput.value.trim();
 
   if (!videoUrl) {
-    out.innerText = '请输入抖音/快手/视频号的分享链接';
+    out.innerText = '请输入抖音/快手分享链接';
     return;
   }
 
-  // 提取纯链接，去掉多余文字和参数
-  const linkMatch = videoUrl.match(/https?:\/\/[^ ]+/);
-  if (!linkMatch) {
-    out.innerText = '❌ 请输入有效的分享链接';
-    return;
-  }
-  videoUrl = linkMatch[0];
-
-  out.innerText = '正在解析无水印视频...';
+  out.innerText = '正在解析...';
   videoPlayer.style.display = 'none';
 
-  // 最新可用的解析接口，部署后直接用
-  fetch(`https://api.txapi.cn/v1/video/parse?url=${encodeURIComponent(videoUrl)}`)
+  fetch(`https://api.pearktrue.cn/api/video/api.php?url=${encodeURIComponent(videoUrl)}`)
   .then(res => res.json())
   .then(data => {
-    if (data.code === 200 && data.data.video) {
-      out.innerText = '✅ 解析成功！视频将自动播放：';
-      videoPlayer.src = data.data.video;
+    if (data.success && data.playurl) {
+      out.innerText = '解析成功';
+      videoPlayer.src = data.playurl;
       videoPlayer.style.display = 'block';
     } else {
-      out.innerText = `❌ 解析失败：${data.msg || '请换一个链接试试'}`;
-      videoPlayer.style.display = 'none';
+      out.innerText = '解析失败，换链接重试';
     }
   })
-  .catch(err => {
-    console.error(err);
-    out.innerText = '❌ 网络请求出错，请稍后再试';
-    videoPlayer.style.display = 'none';
+  .catch(() => {
+    out.innerText = '网络异常';
   });
 }
 
-  
-
-// 实时天气核心函数
+// ===================== 实时天气接口 =====================
 function getWeather() {
   const out = document.getElementById('weatherOut');
-  out.innerText = '正在获取天气...';
-  fetch('https://api.vvhan.com/api/weather/tianqi')
+  out.innerText = '获取中...';
+  fetch('https://api.vvhan.com/api/weather')
   .then(res => res.json())
   .then(data => {
-    if (data.success) {
-      const t = data.data;
-      out.innerText = `城市：${t.city}\n天气：${t.weather}\n温度：${t.temperature}\n风向：${t.wind}\n湿度：${t.humidity}`;
-    } else {
-      out.innerText = '获取失败，请稍后再试';
-    }
+    out.innerText = `${data.city}｜${data.weather}｜${data.temperature}℃`;
   })
-  .catch(() => {
-    out.innerText = '获取失败，请稍后再试';
-  });
+  .catch(() => out.innerText = '获取失败');
 }
 
-// IP地址查询核心函数
+// ===================== IP查询接口 =====================
 function getIPInfo() {
   const out = document.getElementById('ipOut');
-  out.innerText = '正在查询IP信息...';
-  fetch('https://api.ipapi.ws/json/')
+  out.innerText = '查询中...';
+  fetch('https://api.ipify.org?format=json')
   .then(res => res.json())
   .then(data => {
-    out.innerText = `IP：${data.ip}\n地区：${data.region}\n城市：${data.city}\n运营商：${data.org}`;
+    out.innerText = `本机公网IP：\n${data.ip}`;
   })
-  .catch(() => {
-    out.innerText = '查询失败，请稍后再试';
-  });
+  .catch(() => out.innerText = '查询失败');
 }
 
- </script>
-  </body>
+// ===================== 短链接生成 =====================
+function makeShortUrl() {
+  const out = document.getElementById('shortOut');
+  const url = document.getElementById('longUrl').value.trim();
+  if (!url) { out.innerText = '请输入长链接'; return; }
+  out.innerText = '生成中...';
+  fetch(`https://api.tqluan.cn/api/dwz/index.php?url=${encodeURIComponent(url)}`)
+  .then(res => res.text())
+  .then(data => {
+    out.innerText = data.includes('http') ? data : '生成失败';
+  });
+}
+</script>
+</body>
 </html>
