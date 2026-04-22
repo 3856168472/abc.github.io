@@ -724,6 +724,7 @@ ${val} Mbps = ${real.toFixed(2)} MB/s`;
 }
 
 // ===================== 视频解析接口 =====================
+
 function parseVideo() {
   const urlInput = document.getElementById('videoUrl');
   const out = document.getElementById('videoOut');
@@ -738,19 +739,20 @@ function parseVideo() {
   out.innerText = '正在解析...';
   videoPlayer.style.display = 'none';
 
-  fetch(`https://api.pearktrue.cn/api/video/api.php?url=${encodeURIComponent(videoUrl)}`)
+  // 用 GitHub 代理中转请求，绕过跨域限制
+  fetch(`https://api.ghproxy.com/https://api.pearktrue.cn/api/video/api.php?url=${encodeURIComponent(videoUrl)}`)
   .then(res => res.json())
   .then(data => {
     if (data.success && data.playurl) {
-      out.innerText = '解析成功';
+      out.innerText = '✅ 解析成功！';
       videoPlayer.src = data.playurl;
       videoPlayer.style.display = 'block';
     } else {
-      out.innerText = '解析失败，换链接重试';
+      out.innerText = '❌ 解析失败，请换一个新链接试试';
     }
   })
   .catch(() => {
-    out.innerText = '网络异常';
+    out.innerText = '❌ 网络请求出错，请稍后再试';
   });
 }
 
