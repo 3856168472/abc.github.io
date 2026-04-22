@@ -10,7 +10,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>全能工具盒子 · 最终稳定版</title>
+<title>全能工具盒子</title>
 <style>
 * {
   margin: 0;
@@ -26,9 +26,9 @@
   --text-secondary: #aaa;
 }
 body {
-  min-height: 100vh;
   background: var(--bg-dark);
   color: var(--text);
+  min-height: 100vh;
   transition: all 0.3s cubic-bezier(0.34, 0, 0.2, 1);
   overflow-x: hidden;
 }
@@ -90,7 +90,7 @@ body {
 .card .icon {
   width:32px; height:32px; border-radius:8px;
   background:rgba(255,255,255,0.15);
-  display: flex; align-items: center; justify-content: center;
+  display: grid; place-items: center;
   margin-bottom:8px; font-size:18px;
 }
 .card .title { font-size:14px; font-weight:500; }
@@ -138,8 +138,8 @@ body {
 .modal {
   position: fixed; top:0; left:0; width:100%; height:100%;
   background:rgba(0,0,0,0.5); backdrop-filter: blur(4px);
-  display: none; align-items: center; justify-content: center;
-  z-index: 800; padding:20px;
+  display: none; align-items: center; justify-content: center; padding:20px;
+  z-index: 800;
   opacity:0;
   transition: opacity 0.3s ease;
 }
@@ -220,6 +220,12 @@ button.primary:hover {
   border-radius:50%;
   transition: all 0.2s;
 }
+video#videoPlayer {
+  width:100%;
+  border-radius:12px;
+  margin-top:10px;
+  display: none;
+}
 </style>
 </head>
 <body>
@@ -237,80 +243,116 @@ button.primary:hover {
   <div class="tab" data-tab="daily">日常工具</div>
   <div class="tab" data-tab="text">文本工具</div>
   <div class="tab" data-tab="image">图片工具</div>
-  <div class="tab" data-tab="online">在线工具</div>
 </div>
 
 <div class="grid" id="toolGrid">
   <div class="card" data-type="daily" onclick="openModal('bmi')">
-    <div class="icon">🧮</div><div class="title">BMI计算器</div><div class="desc">计算身体质量指数</div>
+    <div class="icon">🧮</div>
+    <div class="title">BMI计算器</div>
+    <div class="desc">计算身体质量指数</div>
   </div>
   <div class="card" data-type="daily" onclick="openModal('timer')">
-    <div class="icon">⏱️</div><div class="title">倒计时器</div><div class="desc">倒计时提醒</div>
+    <div class="icon">⏱️</div>
+    <div class="title">倒计时器</div>
+    <div class="desc">自定义倒计时提醒</div>
   </div>
   <div class="card" data-type="daily" onclick="openModal('todo')">
-    <div class="icon">📋</div><div class="title">待办清单</div><div class="desc">本地永久保存</div>
+    <div class="icon">📋</div>
+    <div class="title">待办清单</div>
+    <div class="desc">本地永久保存</div>
   </div>
   <div class="card" data-type="daily" onclick="openModal('calc')">
-    <div class="icon">🔢</div><div class="title">计算器</div><div class="desc">基础四则运算</div>
+    <div class="icon">🔢</div>
+    <div class="title">计算器</div>
+    <div class="desc">基础四则运算</div>
   </div>
   <div class="card" data-type="daily" onclick="openModal('pwd')">
-    <div class="icon">🔐</div><div class="title">密码生成器</div><div class="desc">随机安全密码</div>
+    <div class="icon">🔐</div>
+    <div class="title">密码生成器</div>
+    <div class="desc">生成安全随机密码</div>
   </div>
   <div class="card" data-type="daily" onclick="openModal('length')">
-    <div class="icon">📏</div><div class="title">长度换算</div><div class="desc">cm/m/km/英寸</div>
+    <div class="icon">📏</div>
+    <div class="title">长度换算</div>
+    <div class="desc">cm/m/km/英寸互转</div>
   </div>
   <div class="card" data-type="daily" onclick="openModal('weight')">
-    <div class="icon">⚖️</div><div class="title">重量换算</div><div class="desc">kg/g/斤/磅</div>
+    <div class="icon">⚖️</div>
+    <div class="title">重量换算</div>
+    <div class="desc">kg/g/斤/磅互转</div>
   </div>
   <div class="card" data-type="daily" onclick="openModal('timeCalc')">
-    <div class="icon">📅</div><div class="title">日期计算</div><div class="desc">计算相隔天数</div>
+    <div class="icon">📅</div>
+    <div class="title">日期差计算</div>
+    <div class="desc">计算相隔天数</div>
   </div>
-
   <div class="card" data-type="daily" onclick="openModal('phone')">
-    <div class="icon">📱</div><div class="title">手机号归属地</div><div class="desc">查询省份城市运营商</div>
+    <div class="icon">📱</div>
+    <div class="title">手机号归属地</div>
+    <div class="desc">查询运营商与地区</div>
   </div>
   <div class="card" data-type="daily" onclick="openModal('idcard')">
-    <div class="icon">🪪</div><div class="title">身份证信息查询</div><div class="desc">校验+生日+地区</div>
+    <div class="icon">🪪</div>
+    <div class="title">身份证信息解析</div>
+    <div class="desc">生日、性别校验</div>
   </div>
   <div class="card" data-type="daily" onclick="openModal('netSpeed')">
-    <div class="icon">📶</div><div class="title">网速单位换算</div><div class="desc">Mbps/MB/s互转</div>
+    <div class="icon">📶</div>
+    <div class="title">网速单位换算</div>
+    <div class="desc">Mbps/MB/s互转</div>
+  </div>
+  <div class="card" data-type="daily" onclick="openModal('weather')">
+    <div class="icon">🌤️</div>
+    <div class="title">实时天气</div>
+    <div class="desc">获取当前城市天气</div>
+  </div>
+  <div class="card" data-type="daily" onclick="openModal('ip')">
+    <div class="icon">🌍</div>
+    <div class="title">IP地址查询</div>
+    <div class="desc">查询IP地区与运营商</div>
   </div>
 
   <div class="card" data-type="text" onclick="openModal('encrypt')">
-    <div class="icon">🔒</div><div class="title">文本加密</div><div class="desc">Base64加解密</div>
+    <div class="icon">🔒</div>
+    <div class="title">文本加解密</div>
+    <div class="desc">Base64编码解码</div>
   </div>
   <div class="card" data-type="text" onclick="openModal('count')">
-    <div class="icon">📝</div><div class="title">字数统计</div><div class="desc">统计字符/字数</div>
+    <div class="icon">📝</div>
+    <div class="title">字数统计</div>
+    <div class="desc">统计字符与字数</div>
   </div>
   <div class="card" data-type="text" onclick="openModal('caseConvert')">
-    <div class="icon">🔤</div><div class="title">大小写转换</div><div class="desc">一键切换大小写</div>
+    <div class="icon">🔤</div>
+    <div class="title">大小写转换</div>
+    <div class="desc">一键转换英文大小写</div>
   </div>
   <div class="card" data-type="text" onclick="openModal('reverseText')">
-    <div class="icon">🔁</div><div class="title">文字反转</div><div class="desc">文字倒序显示</div>
+    <div class="icon">🔁</div>
+    <div class="title">文字反转</div>
+    <div class="desc">一键反转文本内容</div>
   </div>
   <div class="card" data-type="text" onclick="openModal('md5')">
-    <div class="icon">🧾</div><div class="title">MD5加密</div><div class="desc">32位大写MD5</div>
+    <div class="icon">🧾</div>
+    <div class="title">MD5加密</div>
+    <div class="desc">字符串MD5计算</div>
   </div>
 
   <div class="card" data-type="image" onclick="openModal('viewer')">
-    <div class="icon">🖼️</div><div class="title">图片查看器</div><div class="desc">链接直显图片</div>
+    <div class="icon">🖼️</div>
+    <div class="title">图片查看器</div>
+    <div class="desc">输入链接查看图片</div>
   </div>
   <div class="card" data-type="image" onclick="openModal('qr')">
-    <div class="icon">📲</div><div class="title">二维码生成</div><div class="desc">文本转二维码</div>
+    <div class="icon">📲</div>
+    <div class="title">二维码生成</div>
+    <div class="desc">文本转二维码图片</div>
   </div>
 
-  <!-- 视频解析 + 在线专用工具 -->
-  <div class="card" data-type="online" onclick="openModal('videoParse')">
-    <div class="icon">🎬</div><div class="title">视频解析</div><div class="desc">抖音/快手无水印解析</div>
-  </div>
-  <div class="card" data-type="online" onclick="openModal('ipInfo')">
-    <div class="icon">🌍</div><div class="title">本机IP信息</div><div class="desc">公网部署才能查看</div>
-  </div>
-  <div class="card" data-type="online" onclick="openModal('weather')">
-    <div class="icon">⛅</div><div class="title">实时天气</div><div class="desc">公网部署才能查看</div>
-  </div>
-  <div class="card" data-type="online" onclick="openModal('shortUrl')">
-    <div class="icon">✂️</div><div class="title">短链接生成</div><div class="desc">长网址缩短</div>
+  <div class="card" data-type="daily" onclick="openModal('videoParse')">
+    <div class="icon">🎬</div>
+    <div class="title">视频解析播放</div>
+    <div class="desc">无水印直接播放</div>
   </div>
 </div>
 
@@ -320,9 +362,18 @@ button.primary:hover {
     <button id="closeSidebar">✕</button>
   </div>
 
-  <div class="setting-item"><span>深色模式</span><div class="toggle on" id="darkToggle"></div></div>
-  <div class="setting-item"><span>玻璃质感</span><div class="toggle on" id="glassToggle"></div></div>
-  <div class="setting-item"><span>背景模糊</span><div class="toggle" id="blurToggle"></div></div>
+  <div class="setting-item">
+    <span>深色模式</span>
+    <div class="toggle on" id="darkToggle"></div>
+  </div>
+  <div class="setting-item">
+    <span>磨砂毛玻璃效果</span>
+    <div class="toggle on" id="glassToggle"></div>
+  </div>
+  <div class="setting-item">
+    <span>背景模糊效果</span>
+    <div class="toggle" id="blurToggle"></div>
+  </div>
 
   <div id="bgUpload">
     <p>更换背景图片</p>
@@ -344,38 +395,39 @@ function initDB() {
   const req = indexedDB.open('ToolboxDB', 1);
   req.onupgradeneeded = () => {
     db = req.result;
-    if (!db.objectStoreNames.contains('background')) {
-      db.createObjectStore('background', { keyPath: 'id' });
+    if (!db.objectStoreNames.contains('settings')) {
+      db.createObjectStore('settings', { keyPath: 'key' });
     }
   };
   req.onsuccess = () => {
     db = req.result;
     loadBgFromDB();
+    loadSettings();
   };
 }
 initDB();
 
 function saveBgToDB(base64) {
-  const tx = db.transaction('background', 'readwrite');
-  const store = tx.objectStore('background');
-  store.put({ id: 'main', data: base64 });
-  tx.oncomplete = () => console.log('背景已保存');
+  if (!db) return;
+  const tx = db.transaction('settings', 'readwrite');
+  const store = tx.objectStore('settings');
+  store.put({ key: 'bgImage', value: base64 });
 }
 
 function loadBgFromDB() {
-  const tx = db.transaction('background', 'readonly');
-  const store = tx.objectStore('background');
-  const req = store.get('main');
+  if (!db) return;
+  const tx = db.transaction('settings', 'readonly');
+  const store = tx.objectStore('settings');
+  const req = store.get('bgImage');
   req.onsuccess = () => {
-    if (req.result?.data) {
-      bgContainer.style.backgroundImage = `url(${req.result.data})`;
+    if (req.result?.value) {
+      bgContainer.style.backgroundImage = `url(${req.result.value})`;
       bgContainer.classList.add('active');
     }
   };
 }
 
 bgUpload.onclick = () => bgFile.click();
-
 bgFile.onchange = (e) => {
   const file = e.target.files[0];
   if (!file) return;
@@ -385,7 +437,7 @@ bgFile.onchange = (e) => {
     bgContainer.style.backgroundImage = `url(${url})`;
     bgContainer.classList.add('active');
     saveBgToDB(url);
-    alert('背景保存成功！关闭重进也不会丢');
+    alert('背景图片已保存！');
   };
   reader.readAsDataURL(file);
 };
@@ -426,27 +478,25 @@ if (!savedDark) {
 darkToggle.onclick = () => {
   darkToggle.classList.toggle('on');
   const on = darkToggle.classList.contains('on');
-  if (on) {
-    document.body.style.background = '#0b0b18';
-    document.body.style.color = '#fff';
-  } else {
-    document.body.style.background = '#f5f5fa';
-    document.body.style.color = '#000';
-  }
+  document.body.style.background = on ? '#0b0b18' : '#f5f5fa';
+  document.body.style.color = on ? '#fff' : '#000';
   Storage.set('dark', on);
 };
 
 const glassToggle = document.getElementById('glassToggle');
-const glassElements = document.querySelectorAll('.card, .header, .tabs, .sidebar, .modal-content');
 const savedGlass = Storage.get('glass', true);
 if (!savedGlass) {
   glassToggle.classList.remove('on');
-  glassElements.forEach(el => el.style.backdropFilter = 'none');
+  document.querySelectorAll('.card, .header, .tabs, .sidebar, .modal-content').forEach(el => {
+    el.style.backdropFilter = 'none';
+  });
 }
 glassToggle.onclick = () => {
   glassToggle.classList.toggle('on');
   const on = glassToggle.classList.contains('on');
-  glassElements.forEach(el => el.style.backdropFilter = on ? 'blur(10px)' : 'none');
+  document.querySelectorAll('.card, .header, .tabs, .sidebar, .modal-content').forEach(el => {
+    el.style.backdropFilter = on ? 'blur(10px)' : 'none';
+  });
   Storage.set('glass', on);
 };
 
@@ -456,7 +506,11 @@ document.querySelectorAll('.tab').forEach(tab => {
     tab.classList.add('active');
     const type = tab.dataset.tab;
     document.querySelectorAll('.card').forEach(card => {
-      card.style.display = (type === 'all' || card.dataset.type === type) ? 'block' : 'none';
+      if (type === 'all' || card.dataset.type === type) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
     });
   };
 });
@@ -472,7 +526,9 @@ function closeModal() {
   modal.classList.remove('open');
   setTimeout(() => modalContent.innerHTML = '', 300);
 }
-modal.onclick = (e) => e.target === modal && closeModal();
+modal.onclick = (e) => {
+  if (e.target === modal) closeModal();
+};
 
 function md5(str) {
   function add32(a, b) { return (a + b) & 0xFFFFFFFF }
@@ -493,7 +549,7 @@ function md5(str) {
   for (let i = 0; i < 8; i++) bytes.push((len >>> (i * 8)) & 0xFF);
 
   let a = 0x67452301, b = 0xefcdab89, c = 0x98badcfe, d = 0x10325476;
-  const K = [0xd76aa478,0xe8c7b756,0x242070db,0xc1bdceee,0xf57c0faf,0x4787c62a,0xa8304613,0xfd469501,0x698098d8,0x8b44f7af,0xffff5bb1,0x895cd7be,0x6b901122,0xfd987193,0xa679438e,0x49b40821,0xf61e2562,0xc040b340,0x265e5a51,0xe9b6c7aa,0xd62f105d,0x02441453,0xd8a1e681,0xe7d3fbc8,0x21e1cde6,0xc33707d6,0xf4d50d87,0x455a14ed,0xa9e3e905,0xfcefa3f8,0x676f02d9,0x8d2a4c8a,0xfffa3942,0x8771f681,0x6d9d6122,0xfde5380c,0xa4beea44,0x4bdecfa9,0xf6bb4b60,0xbebfbc70,0x289b7ec6,0xeaa127fa,0xd4ef3085,0x04881d05,0xd9d4d039,0xe6db99e5,0x1fa27cf8,0xc4ac5665,0xf4292244,0x432aff97,0xab9423a7,0xfc93a039,0x655b59c3,0x8f0ccc92,0xffeff47d,0x85845dd1,0x6fa87e4f,0xfe2ce6e0,0xa3014314,0x4e0811a1,0xf7537e82,0xbd3af235,0x2ad7d2bb,0xeb86d391];
+  const K = [0xd76aa478,0xe8c7b756,0x242070db,0xc1bdceee,0xf57c0faf,0x4787c62a,0xa8304613,0xfd469501,0x698098d8,0x8b44f7af,0xffff5bb1,0x895cd7be,0x6b901122,0xfd987193,0xa679438e,0x49b40821,0xf61e2562,0xc040b340,0x265e5a51,0xe9b6c7aa,0xd62f105d,0x02441453,0xd8a1e681,0xe7d3fbc8,0x21e1cde6,0xc33707d6,0xf4d50d87,0x455a14ed,0xa9e3e905,0xfcefa3f8,0x676f02d9,0x8d2a4c8a,0xfff47d8e,0x8771f681,0x6d9d6122,0xfde5380c,0xa4beea44,0x4bdecfa9,0xf6bb4b60,0xbebfbc70,0x289b7ec6,0xeaa127fa,0xd4ef3085,0x04881d05,0xd9d4d039,0xe6db99e5,0x1fa27cf8,0xc4ac5665,0xf4292244,0x432aff97,0xab9423a7,0xfc93a039,0x655b59c3,0x8f0ccc92,0xffeff47d,0x85845dd1,0x6fa87e4f,0xfe2ce6e0,0xa3014314,0x4e0811a1,0xf7537e82,0xbd3af235,0x2ad7d2bb,0xeb86d391];
   const R = [7,12,17,22,5,9,14,20,4,11,16,23,6,10,15,21];
   for (let i = 0; i < bytes.length; i += 64) {
     let x = [];
@@ -507,16 +563,16 @@ function md5(str) {
       else if (j < 32) { f = (d & b) | (~d & c); g = (5 * j + 1) % 16; }
       else if (j < 48) { f = b ^ c ^ d; g = (3 * j + 5) % 16; }
       else { f = c ^ (b | ~d); g = (7 * j) % 16; }
-      let t = d; d = c; c = b;
-      b = add32(b, rol(add32(add32(a, f), add32(K[j], x[g])), R[(j >> 2) * 4 + (j % 4)]));
-      a = t;
+      let temp = d; d = c; c = b;
+      b = add32(b, rol(add32(add32(a, f), add32(K[j], x[g])), R[(j >> 4) * 4 + (j % 4)]));
+      a = temp;
     }
     a = add32(a, aa); b = add32(b, bb); c = add32(c, cc); d = add32(d, dd);
   }
   return (hex(a) + hex(b) + hex(c) + hex(d)).toUpperCase();
 }
 
-let todoList = Storage.get('todo') || [];
+let todoList = Storage.get('todo', []);
 let calcStr = '';
 let timer = null;
 
@@ -524,69 +580,66 @@ function renderTool(type) {
   let h = '';
   switch(type){
     case 'bmi':
-      h = `<div class="modal-header"><h3>BMI计算器</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="h" placeholder="身高cm" type="number"><input id="w" placeholder="体重kg" type="number"><button class="primary" onclick="bmi()">计算</button><div class="output" id="bmiOut"></div>`; break;
+      h = `<div class="modal-header"><h3>BMI计算器</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="h" placeholder="身高(cm)" type="number"><input id="w" placeholder="体重(kg)" type="number"><button class="primary" onclick="bmi()">计算</button><div class="output" id="out"></div>`; break;
     case 'timer':
-      h = `<div class="modal-header"><h3>倒计时</h3><button class="modal-close" onclick="closeModal()">×</button></div><div class="output" id="t" style="text-align:center;font-size:32px">00:00</div><input id="s" placeholder="秒数" type="number"><button class="primary" onclick="start()">开始</button>`; break;
+      h = `<div class="modal-header"><h3>倒计时器</h3><button class="modal-close" onclick="closeModal()">×</button></div><div class="output" id="t" style="text-align:center;font-size:32px">00:00</div><input id="s" placeholder="秒数" type="number"><button class="primary" onclick="startTimer()">开始</button>`; break;
     case 'todo':
-      h = `<div class="modal-header"><h3>待办</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="task" placeholder="输入任务"><button class="primary" onclick="add()">添加</button><div id="list"></div>`; break;
+      h = `<div class="modal-header"><h3>待办清单</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="task" placeholder="输入任务"><button class="primary" onclick="addTodo()">添加</button><div id="list"></div>`; break;
     case 'calc':
       h = `<div class="modal-header"><h3>计算器</h3><button class="modal-close" onclick="closeModal()">×</button></div><div class="output" id="c">0</div><div class="calc-btns"><button class="calc-btn" onclick="i('7')">7</button><button class="calc-btn" onclick="i('8')">8</button><button class="calc-btn" onclick="i('9')">9</button><button class="calc-btn" onclick="i('/')">÷</button><button class="calc-btn" onclick="i('4')">4</button><button class="calc-btn" onclick="i('5')">5</button><button class="calc-btn" onclick="i('6')">6</button><button class="calc-btn" onclick="i('*')">×</button><button class="calc-btn" onclick="i('1')">1</button><button class="calc-btn" onclick="i('2')">2</button><button class="calc-btn" onclick="i('3')">3</button><button class="calc-btn" onclick="i('-')">-</button><button class="calc-btn" onclick="i('0')">0</button><button class="calc-btn" onclick="clr()">C</button><button class="calc-btn eq" onclick="eq()">=</button><button class="calc-btn" onclick="i('+')">+</button></div>`; break;
     case 'pwd':
-      h = `<div class="modal-header"><h3>密码生成</h3><button class="modal-close" onclick="closeModal()">×</button></div><div class="output" id="pwd"></div><button class="primary" onclick="gen()">生成</button>`; break;
+      h = `<div class="modal-header"><h3>密码生成器</h3><button class="modal-close" onclick="closeModal()">×</button></div><button class="primary" onclick="gen()">生成密码</button><div class="output" id="pwd"></div>`; break;
     case 'length':
-      h = `<div class="modal-header"><h3>长度换算</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="m" placeholder="米" type="number"><button class="primary" onclick="len()">换算</button><div class="output" id="lout"></div>`; break;
+      h = `<div class="modal-header"><h3>长度换算</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="m" placeholder="米(m)" type="number"><button class="primary" onclick="len()">换算</button><div class="output" id="lout"></div>`; break;
     case 'weight':
-      h = `<div class="modal-header"><h3>重量换算</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="kg" placeholder="千克" type="number"><button class="primary" onclick="wei()">换算</button><div class="output" id="wout"></div>`; break;
+      h = `<div class="modal-header"><h3>重量换算</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="kg" placeholder="千克(kg)" type="number"><button class="primary" onclick="wei()">换算</button><div class="output" id="wout"></div>`; break;
     case 'timeCalc':
-      h = `<div class="modal-header"><h3>日期计算</h3><button class="modal-close" onclick="closeModal()">×</button></div><input type="date" id="d1"><input type="date" id="d2"><button class="primary" onclick="date()">计算</button><div class="output" id="dout"></div>`; break;
-    case 'encrypt':
-      h = `<div class="modal-header"><h3>加解密</h3><button class="modal-close" onclick="closeModal()">×</button></div><textarea id="etext" rows="4"></textarea><div style="display:flex;gap:8px"><button class="primary" onclick="enc()" style="flex:1">加密</button><button class="primary" onclick="dec()" style="flex:1">解密</button></div><div class="output" id="eout"></div>`; break;
-    case 'count':
-      h = `<div class="modal-header"><h3>字数统计</h3><button class="modal-close" onclick="closeModal()">×</button></div><textarea id="ctext" rows="3"></textarea><button class="primary" onclick="cnt()">统计</button><div class="output" id="cout"></div>`; break;
-    case 'caseConvert':
-      h = `<div class="modal-header"><h3>大小写</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="ct" placeholder="输入英文"><div style="display:flex;gap:8px"><button class="primary" onclick="up()" style="flex:1">大写</button><button class="primary" onclick="lo()" style="flex:1">小写</button></div><div class="output" id="cout2"></div>`; break;
-    case 'reverseText':
-      h = `<div class="modal-header"><h3>文字反转</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="rt" placeholder="输入文字"><button class="primary" onclick="rev()">反转</button><div class="output" id="rout"></div>`; break;
-    case 'md5':
-      h = `<div class="modal-header"><h3>MD5加密</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="mt" placeholder="输入内容"><button class="primary" onclick="domd5()">生成</button><div class="output" id="mout"></div>`; break;
-    case 'viewer':
-      h = `<div class="modal-header"><h3>图片查看</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="imgurl" placeholder="图片链接"><button class="primary" onclick="showimg()">显示</button><img id="prev" style="max-width:100%;border-radius:12px;margin-top:12px;display:none">`; break;
-    case 'qr':
-      h = `<div class="modal-header"><h3>二维码</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="qt" placeholder="内容"><button class="primary" onclick="qrcode()">生成</button><img id="qimg" style="max-width:100%;margin-top:12px;display:none">`; break;
+      h = `<div class="modal-header"><h3>日期差计算</h3><button class="modal-close" onclick="closeModal()">×</button></div><input type="date" id="d1"><input type="date" id="d2"><button class="primary" onclick="dateCalc()">计算天数差</button><div class="output" id="dout"></div>`; break;
     case 'phone':
-      h = `<div class="modal-header"><h3>手机号归属地</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="phone" placeholder="输入手机号前7位或完整号码" maxlength="11"><button class="primary" onclick="queryPhone()">查询</button><div class="output" id="phoneOut"></div>`; break;
+      h = `<div class="modal-header"><h3>手机号归属地</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="phone" placeholder="手机号" maxlength="11"><button class="primary" onclick="queryPhone()">查询</button><div class="output" id="pout"></div>`; break;
     case 'idcard':
-      h = `<div class="modal-header"><h3>身份证信息查询</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="idcard" placeholder="输入18位身份证号" maxlength="18"><button class="primary" onclick="queryIdCard()">查询</button><div class="output" id="idcardOut"></div>`; break;
+      h = `<div class="modal-header"><h3>身份证解析</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="idcard" placeholder="18位身份证号" maxlength="18"><button class="primary" onclick="queryIdCard()">解析</button><div class="output" id="idout"></div>`; break;
     case 'netSpeed':
-      h = `<div class="modal-header"><h3>网速换算</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="speedVal" placeholder="输入数值" type="number"><button class="primary" onclick="calcNetSpeed()">转换 Mbps ↔ MB/s</button><div class="output" id="speedOut"></div>`; break;
-    // 视频解析
+      h = `<div class="modal-header"><h3>网速换算</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="speedVal" placeholder="数值" type="number"><button class="primary" onclick="calcNetSpeed()">换算</button><div class="output" id="speedOut"></div>`; break;
+    case 'encrypt':
+      h = `<div class="modal-header"><h3>文本加解密</h3><button class="modal-close" onclick="closeModal()">×</button></div><textarea id="etext" rows="4" placeholder="输入文本"></textarea><div style="display:flex;gap:8px"><button class="primary" onclick="enc()" style="flex:1">加密</button><button class="primary" onclick="dec()" style="flex:1">解密</button></div><div class="output" id="eout"></div>`; break;
+    case 'count':
+      h = `<div class="modal-header"><h3>字数统计</h3><button class="modal-close" onclick="closeModal()">×</button></div><textarea id="ctext" rows="3" placeholder="输入文本"></textarea><button class="primary" onclick="cnt()">统计</button><div class="output" id="cout"></div>`; break;
+    case 'caseConvert':
+      h = `<div class="modal-header"><h3>大小写转换</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="ct" placeholder="输入英文"><div style="display:flex;gap:8px"><button class="primary" onclick="up()" style="flex:1">大写</button><button class="primary" onclick="low()" style="flex:1">小写</button></div><div class="output" id="cout2"></div>`; break;
+    case 'reverseText':
+      h = `<div class="modal-header"><h3>文字反转</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="rt" placeholder="输入文本"><button class="primary" onclick="rev()">反转</button><div class="output" id="rout"></div>`; break;
+    case 'md5':
+      h = `<div class="modal-header"><h3>MD5加密</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="mt" placeholder="输入字符串"><button class="primary" onclick="domd5()">生成MD5</button><div class="output" id="mout"></div>`; break;
+    case 'viewer':
+      h = `<div class="modal-header"><h3>图片查看器</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="imgurl" placeholder="图片链接"><button class="primary" onclick="showimg()">查看</button><div class="output" id="iout"></div>`; break;
+    case 'qr':
+      h = `<div class="modal-header"><h3>二维码生成</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="qt" placeholder="文本/链接"><button class="primary" onclick="qrcode()">生成</button><div class="output" id="qout"></div>`; break;
     case 'videoParse':
-      h = `<div class="modal-header"><h3>视频解析</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="videoUrl" placeholder="粘贴抖音/快手分享链接"><button class="primary" onclick="parseVideo()">解析视频</button><video id="videoPlayer" controls style="width:100%;border-radius:12px;margin-top:12px;display:none"></video><div class="output" id="videoOut"></div>`; break;
-    // 公网部署专用功能
-    case 'ipInfo':
-      h = `<div class="modal-header"><h3>本机IP信息</h3><button class="modal-close" onclick="closeModal()">×</button></div><button class="primary" onclick="getIpInfo()">获取IP信息</button><div class="output" id="ipOut"></div>`; break;
+      h = `<div class="modal-header"><h3>视频解析播放</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="videoUrl" placeholder="粘贴抖音/快手/视频号分享链接"><button class="primary" onclick="parseVideo()">解析并播放</button><div class="output" id="videoOut"></div><video id="videoPlayer" controls style="width:100%; border-radius:12px; margin-top:10px; display:none;"></video>`; break;
     case 'weather':
       h = `<div class="modal-header"><h3>实时天气</h3><button class="modal-close" onclick="closeModal()">×</button></div><button class="primary" onclick="getWeather()">获取当前天气</button><div class="output" id="weatherOut"></div>`; break;
-    case 'shortUrl':
-      h = `<div class="modal-header"><h3>短链接生成</h3><button class="modal-close" onclick="closeModal()">×</button></div><input id="longUrl" placeholder="输入长链接"><button class="primary" onclick="makeShortUrl()">生成短链接</button><div class="output" id="shortOut"></div>`; break;
+    case 'ip':
+      h = `<div class="modal-header"><h3>IP地址查询</h3><button class="modal-close" onclick="closeModal()">×</button></div><button class="primary" onclick="getIPInfo()">查询IP信息</button><div class="output" id="ipOut"></div>`; break;
   }
   modalContent.innerHTML = h;
-  if (type === 'todo') r();
+  if (type === 'todo') renderTodoList();
 }
 
 function bmi() {
   const h = +document.getElementById('h').value/100;
   const w = +document.getElementById('w').value;
-  if (!h||!w)return;
+  if (!h || !w) return;
   const b = (w/(h*h)).toFixed(1);
-  let s = b<18.5?'偏瘦':b<24?'正常':b<28?'超重':'肥胖';
-  document.getElementById('bmiOut').innerText = `BMI: ${b}\n${s}`;
+  let s = '';
+  if(b<18.5)s='偏瘦';else if(b<24)s='正常';else if(b<28)s='超重';else s='肥胖';
+  document.getElementById('out').innerText = `BMI: ${b}\n状态: ${s}`;
 }
 
-function start() {
+function startTimer() {
   clearInterval(timer);
   let s = +document.getElementById('s').value;
-  if (!s||s<=0)return;
+  if (!s || s<=0) return;
   timer = setInterval(()=>{
     if(s<=0){ clearInterval(timer); alert('时间到！'); return; }
     s--;
@@ -596,35 +649,36 @@ function start() {
   },1000);
 }
 
-function r(){
+function renderTodoList(){
   let l='';
-  todoList.forEach((it,i)=>{
-    l+=`<div class="todo-item"><span>${it}</span><span class="todo-del" onclick="del(${i})">×</span></div>`;
+  todoList.forEach((item,i)=>{
+    l+=`<div class="todo-item"><span>${item}</span><span class="todo-del" onclick="delTodo(${i})">×</span></div>`;
   });
   document.getElementById('list').innerHTML=l;
 }
-function add(){
+function addTodo(){
   const t=document.getElementById('task').value.trim();
   if(!t)return;
   todoList.push(t);
   Storage.set('todo',todoList);
-  r();
+  renderTodoList();
   document.getElementById('task').value='';
 }
-function del(i){
+function delTodo(i){
   todoList.splice(i,1);
   Storage.set('todo',todoList);
-  r();
+  renderTodoList();
 }
 
 function i(v){calcStr+=v;document.getElementById('c').innerText=calcStr}
 function clr(){calcStr='';document.getElementById('c').innerText='0'}
 function eq(){
-  try{calcStr=eval(calcStr.replace('×','*').replace('÷','/'))+'';document.getElementById('c').innerText=calcStr}catch(e){}
+  try{calcStr=eval(calcStr.replace(/×/g,'*').replace(/÷/g,'/'))+''}catch(e){}
+  document.getElementById('c').innerText=calcStr;
 }
 
 function gen(){
-  const cs='ABCDEFGHJKLMNPQRSTWXYZabcdefhijkmnpqrstwxyz23456789!@#$%^&*';
+  const cs='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
   let p='';
   for(let i=0;i<16;i++)p+=cs[Math.floor(Math.random()*cs.length)];
   document.getElementById('pwd').innerText=p;
@@ -633,18 +687,18 @@ function gen(){
 function len(){
   const v=+document.getElementById('m').value;
   if(!v)return;
-  document.getElementById('lout').innerText=`厘米:${v*100}\n千米:${v/1000}\n英寸:${(v*39.37).toFixed(2)}`;
+  document.getElementById('lout').innerText=`厘米: ${v*100}\n千米: ${v/1000}\n英寸: ${(v*39.3701).toFixed(2)}`;
 }
 function wei(){
   const v=+document.getElementById('kg').value;
   if(!v)return;
-  document.getElementById('wout').innerText=`克:${v*1000}\n斤:${v*2}\n磅:${(v*2.2046).toFixed(2)}`;
+  document.getElementById('wout').innerText=`克: ${v*1000}\n斤: ${v*2}\n磅: ${(v*2.20462).toFixed(2)}`;
 }
-function date(){
+function dateCalc(){
   const d1=new Date(document.getElementById('d1').value);
   const d2=new Date(document.getElementById('d2').value);
   const day=Math.abs(Math.floor((d2-d1)/86400000));
-  document.getElementById('dout').innerText=`相差 ${day} 天`;
+  document.getElementById('dout').innerText=`相差天数: ${day} 天`;
 }
 function enc(){
   const t=document.getElementById('etext').value;
@@ -652,159 +706,126 @@ function enc(){
 }
 function dec(){
   const t=document.getElementById('etext').value;
-  document.getElementById('eout').innerText=decodeURIComponent(escape(atob(t)));
+  try{document.getElementById('eout').innerText=decodeURIComponent(escape(atob(t)))}catch(e){document.getElementById('eout').innerText='解密失败'}
 }
 function cnt(){
   const t=document.getElementById('ctext').value;
-  document.getElementById('cout').innerText=`总字符:${t.length}\n纯文本:${t.replace(/\s/g,'').length}`;
+  document.getElementById('cout').innerText=`总字符数: ${t.length}\n纯文本字数: ${t.replace(/\s/g,'').length}`;
 }
 function up(){document.getElementById('cout2').innerText=document.getElementById('ct').value.toUpperCase()}
-function lo(){document.getElementById('cout2').innerText=document.getElementById('ct').value.toLowerCase()}
+function low(){document.getElementById('cout2').innerText=document.getElementById('ct').value.toLowerCase()}
 function rev(){document.getElementById('rout').innerText=document.getElementById('rt').value.split('').reverse().join('')}
 function domd5(){
   const t=document.getElementById('mt').value;
-  if(!t)return;
   document.getElementById('mout').innerText=md5(t);
 }
 function showimg(){
   const u=document.getElementById('imgurl').value;
-  const i=document.getElementById('prev');
-  i.src=u;i.style.display='block';
+  document.getElementById('iout').innerHTML=`<img src="${u}" style="width:100%;border-radius:8px" onerror="this.nextSibling.style.display='block'"><span style="display:none;color:#ff6b6b">图片加载失败，请检查链接</span>`;
 }
 function qrcode(){
   const t=document.getElementById('qt').value;
   if(!t)return;
-  document.getElementById('qimg').src=`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(t)}`;
-  document.getElementById('qimg').style.display='block';
+  document.getElementById('qout').innerHTML=`<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(t)}" style="width:100%;border-radius:8px">`;
+}
+function queryPhone(){
+  const v=document.getElementById('phone').value.trim();
+  if(!/^1[3-9]\d{9}$/.test(v)){document.getElementById('pout').innerText='请输入正确的手机号';return}
+  const pre=v.slice(0,3);
+  const yidong=['134','135','136','137','138','139','150','151','152','157','158','159','178','182','183','187','188','198'];
+  const liantong=['130','131','132','155','156','175','176','185','186','166'];
+  const dianxin=['133','153','173','177','180','181','189','199'];
+  let op='未知';
+  if(yidong.includes(pre))op='中国移动';
+  else if(liantong.includes(pre))op='中国联通';
+  else if(dianxin.includes(pre))op='中国电信';
+  document.getElementById('pout').innerText=`运营商: ${op}`;
+}
+function queryIdCard(){
+  const v=document.getElementById('idcard').value.trim();
+  if(!/^\d{17}[\dXx]$/.test(v)){document.getElementById('idout').innerText='身份证号格式错误';return}
+  const birth=v.slice(6,10)+'-'+v.slice(10,12)+'-'+v.slice(12,14);
+  const gender=parseInt(v[16])%2===0?'女':'男';
+  document.getElementById('idout').innerText=`生日: ${birth}\n性别: ${gender}`;
+}
+function calcNetSpeed(){
+  const v=parseFloat(document.getElementById('speedVal').value);
+  if(isNaN(v)||v<0){document.getElementById('speedOut').innerText='请输入有效数值';return}
+  document.getElementById('speedOut').innerText=`MB/s 转 Mbps: ${(v*8).toFixed(2)}\nMbps 转 MB/s: ${(v/8).toFixed(2)}`;
 }
 
-function queryPhone() {
-  const v = document.getElementById('phone').value.trim();
-  const out = document.getElementById('phoneOut');
-  if (!/^1[3-9]\d{9}$/.test(v) && !/^1[3-9]\d{6}$/.test(v)) {
-    out.innerText = '请输入有效的手机号（11位或前7位）'; return;
-  }
-  const pre = v.slice(0, 3);
-  let isp = '未知运营商';
-
-  const yidong = ['139','138','137','136','135','134','147','150','151','152','157','158','159','178','182','183','184','187','188','198'];
-  const liantong = ['130','131','132','145','155','156','166','175','176','185','186'];
-  const dianxin = ['133','149','153','173','177','180','181','189','199'];
-
-  if (yidong.includes(pre)) isp = '中国移动';
-  else if (liantong.includes(pre)) isp = '中国联通';
-  else if (dianxin.includes(pre)) isp = '中国电信';
-
-  out.innerText = `手机号：${v}\n运营商：${isp}\n说明：基于号段查询，不联网`;
-}
-
-function queryIdCard() {
-  const code = document.getElementById('idcard').value.trim();
-  const out = document.getElementById('idcardOut');
-  if (!/^\d{17}[\dXx]$/.test(code)) {
-    out.innerText = '身份证格式不正确'; return;
-  }
-
-  const birth = code.slice(6,10) + '-' + code.slice(10,12) + '-' + code.slice(12,14);
-  const gender = parseInt(code.slice(16,17)) % 2 === 0 ? '女' : '男';
-  const weights = [7,9,10,5,8,4,2,1,6,3,7,9,10,5,8,4,2];
-  const codes = '10X98765432';
-  let sum = 0;
-  for (let i=0;i<17;i++) sum += parseInt(code[i]) * weights[i];
-  const valid = codes[sum % 11] === code[17].toUpperCase();
-
-  out.innerText = 
-`格式：${valid ? '✅ 合法' : '❌ 无效'}
-生日：${birth}
-性别：${gender}
-地址码：${code.slice(0,6)}`;
-}
-
-function calcNetSpeed() {
-  const val = parseFloat(document.getElementById('speedVal').value);
-  const out = document.getElementById('speedOut');
-  if (isNaN(val) || val < 0) {
-    out.innerText = '请输入有效数字'; return;
-  }
-  const mbps = val * 8;
-  const real = val / 8;
-  out.innerText = 
-`${val} MB/s = ${mbps} Mbps
-${val} Mbps = ${real.toFixed(2)} MB/s`;
-}
-
-// ====================== 视频解析（你要的）======================
-async function parseVideo() {
-  const url = document.getElementById('videoUrl').value.trim();
+// 视频解析+直接播放（无水印，GitHub Pages可用）
+function parseVideo() {
+  const urlInput = document.getElementById('videoUrl');
   const out = document.getElementById('videoOut');
-  const player = document.getElementById('videoPlayer');
-  if (!url) { out.innerText = '请输入视频链接'; return; }
+  const videoPlayer = document.getElementById('videoPlayer');
+  const videoUrl = urlInput.value.trim();
 
-  try {
-    out.innerText = '正在解析...';
-    let api = '';
-    if (url.includes('douyin')) {
-      api = `https://api.pearktrue.cn/api/douyin/?url=${encodeURIComponent(url)}`;
-    } else if (url.includes('kuaishou')) {
-      api = `https://api.pearktrue.cn/api/kuaishou/?url=${encodeURIComponent(url)}`;
-    } else {
-      out.innerText = '仅支持抖音/快手'; return;
-    }
-
-    const res = await fetch(api);
-    const data = await res.json();
-    if (data.code === 200) {
-      const videoUrl = data.data.video || data.data.url;
-      player.src = videoUrl;
-      player.style.display = 'block';
-      out.innerText = '解析成功！';
-    } else {
-      out.innerText = '解析失败：' + (data.msg || '接口异常');
-    }
-  } catch (e) {
-    out.innerText = '错误：本地打开会跨域，部署网站后正常使用';
+  if (!videoUrl) {
+    out.innerText = '请输入抖音/快手/视频号的分享链接';
+    return;
   }
+
+  out.innerText = '正在解析无水印视频...';
+  videoPlayer.style.display = 'none';
+
+  const apiUrl = `https://api.03c3.cn/api/Video/?url=${encodeURIComponent(videoUrl)}`;
+
+  fetch(apiUrl)
+  .then(res => res.json())
+  .then(data => {
+    if (data.code === 200 && data.data.url) {
+      out.innerText = '✅ 解析成功！视频将自动播放：';
+      videoPlayer.src = data.data.url;
+      videoPlayer.style.display = 'block';
+    } else {
+      out.innerText = '❌ 解析失败，请检查链接是否有效，或稍后再试';
+      videoPlayer.style.display = 'none';
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    out.innerText = '❌ 解析出错，请稍后再试';
+    videoPlayer.style.display = 'none';
+  });
 }
 
-// ====================== 公网部署专用功能 ======================
-async function getIpInfo() {
-  const out = document.getElementById('ipOut');
-  out.innerText = '获取中...';
-  try {
-    const r = await fetch('https://api.ip.sb/geoip');
-    const d = await r.json();
-    out.innerText = `IP: ${d.ip}\n地区: ${d.country} ${d.region} ${d.city}\n运营商: ${d.organization}`;
-  } catch(e) {
-    out.innerText = '仅公网部署可用，本地会跨域';
-  }
-}
-
-async function getWeather() {
+// 实时天气（GitHub Pages可用）
+function getWeather() {
   const out = document.getElementById('weatherOut');
-  out.innerText = '获取中...';
-  try {
-    const r = await fetch('https://api.weatherapi.com/v1/current.json?key=370b095935b44ab5824105247252701&q=auto&lang=zh');
-    const d = await r.json();
-    out.innerText = `地区: ${d.location.name}\n天气: ${d.current.condition.text}\n温度: ${d.current.temp_c}℃\n湿度: ${d.current.humidity}%`;
-  } catch(e) {
-    out.innerText = '仅公网部署可用，本地会跨域';
-  }
+  out.innerText = '正在获取天气...';
+  fetch('https://api.vvhan.com/api/weather/tianqi?type=week')
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      const t = data.data;
+      out.innerText = `城市：${t.city}\n天气：${t.weather}\n温度：${t.temperature}\n风向：${t.wind}\n湿度：${t.humidity}`;
+    } else {
+      out.innerText = '获取失败，请稍后再试';
+    }
+  })
+  .catch(() => {
+    out.innerText = '获取失败，请稍后再试';
+  });
 }
 
-async function makeShortUrl() {
-   const url = document.getElementById('longUrl').value.trim();
-   const out = document.getElementById('shortOut');
-   if (!url) { out.innerText = '请输入链接'; return; }
-   try {
-     out.innerText = '生成中...';
-     const r = await fetch(`https://api.t.ly/api/shorten?url=${encodeURIComponent(url)}`);
-     const d = await r.json();
-     if (d.short) out.innerText = d.short;
-     else out.innerText = '生成失败';
-   } catch(e) {
-     out.innerText = '仅公网部署可用，本地会跨域';
-   }
- }
- </script>
+// IP地址查询（GitHub Pages可用）
+function getIPInfo() {
+  const out = document.getElementById('ipOut');
+  out.innerText = '正在查询IP信息...';
+  fetch('https://api.ipapi.ws/json/')
+  .then(res => res.json())
+  .then(data => {
+    out.innerText = `IP：${data.ip}\n地区：${data.region}\n城市：${data.city}\n运营商：${data.org}`;
+  })
+  .catch(() => {
+    out.innerText = '查询失败，请稍后再试';
+  });
+}
+</script>
+</body>
+</html>
+
+
   </body>
 </html>
